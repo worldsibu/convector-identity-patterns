@@ -12,23 +12,19 @@ Example:
 
 ## Basic concepts
 
-### Identities in Fabric. [Read more here](https://hyperledger-fabric.readthedocs.io/en/release-1.4/identity/identity.html).
+### Identities in Fabric. [Read more here](https://hyperledger-fabric.readthedocs.io/en/release-1.4/identity/identity.html)
 
-```bash
-The different actors in a blockchain network include peers, orderers, client applications, administrators and more. Each of these actors — active elements inside or outside a network able to consume services — has a digital identity encapsulated in an X.509 digital certificate. These identities really matter because they determine the exact permissions over resources and access to information that actors have in a blockchain network.
-```
+> The different actors in a blockchain network include peers, orderers, client applications, administrators and more. Each of these actors — active elements inside or outside a network able to consume services — has a digital identity encapsulated in an X.509 digital certificate. These identities really matter because they determine the exact permissions over resources and access to information that actors have in a blockchain network.
 
 ### Attribute-Based Access Control or ABAC [Read more](https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html#attribute-based-access-control)
 
-```bash
-Access control decisions can be made by chaincode (and by the Hyperledger Fabric runtime) based upon an identity’s attributes. This is called Attribute-Based Access Control, or ABAC for short.
+> Access control decisions can be made by chaincode (and by the Hyperledger Fabric runtime) based upon an identity’s attributes. This is called Attribute-Based Access Control, or ABAC for short.
 
-In order to make this possible, an identity’s enrollment certificate (ECert) may contain one or more attribute name and value. The chaincode then extracts an attribute’s value to make an access control decision.
-```
+> In order to make this possible, an identity’s enrollment certificate (ECert) may contain one or more attribute name and value. The chaincode then extracts an attribute’s value to make an access control decision.
 
 ### Participant chaincode on Convector
 
-It is a common pattern to reflect a CA identity in a chaincode accessible way.
+> It is a common pattern to reflect a CA identity in a chaincode accessible way.
 These identities do not replace Fabric identities, on the contraire, it leverages them to work in business use cases.
 
 ## Run the project
