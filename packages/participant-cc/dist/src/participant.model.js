@@ -4,7 +4,7 @@ var tslib_1 = require("tslib");
 var yup = require("yup");
 var convector_core_model_1 = require("@worldsibu/convector-core-model");
 exports.x509Identities = yup.object().shape({
-    status: yup.string().required(),
+    status: yup.boolean().required(),
     fingerprint: yup.string().required()
 });
 var Participant = (function (_super) {

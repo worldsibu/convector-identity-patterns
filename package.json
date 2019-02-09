@@ -7,15 +7,15 @@
   ],
   "scripts": {
     "install": "npm-run-all -s lerna:install",
-    "env:restart": "./node_modules/.bin/hurl new",
-    "env:clean": "./node_modules/.bin/hurl clean",
-    "cc:start": "f() { npm run cc:package -- $1 org1; npm run cc:install $1; }; f",
-    "cc:upgrade": "f() { npm run cc:package -- $1 org1; ./node_modules/.bin/hurl upgrade $1 node $2  -P ./chaincode-$1; }; f",
+    "env:restart": "hurl new",
+    "env:clean": "hurl clean",
+    "cc:start": "f() { npm run cc:package; npm run cc:install; }; f",
+    "cc:upgrade": "f() { npm run cc:package; hurl upgrade identities node $1  -P ./chaincode-identities; }; f",
     "===================INTERNALS===================": "===================NO NEED TO CALL THEM DIRECTLY===================",
     "lerna:install": "lerna bootstrap",
     "lerna:build": "lerna run build",
-    "cc:package": "f() { npm run lerna:build; chaincode-manager --config ./$2.$1.config.json --output ./chaincode-$1 package; }; f",
-    "cc:install": "f() { ./node_modules/.bin/hurl install $1 node -P ./chaincode-$1; }; f"
+    "cc:package": "f() { npm run lerna:build; chaincode-manager --config ./org1.identities.config.json --output ./chaincode-identities package; }; f",
+    "cc:install": "f() { hurl install identities node -P ./chaincode-identities; }; f"
   },
   "devDependencies": {
     "@worldsibu/convector-adapter-mock": "^1.2.0",

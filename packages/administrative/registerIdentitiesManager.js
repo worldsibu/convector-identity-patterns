@@ -21,7 +21,7 @@ var fabric_ca_client = null;
 var admin_user = null;
 var member_user = null;
 const homedir = require('os').homedir();
-var hurleyIdentityPath = path.resolve(homedir,'hyperledger-fabric-network/.hfc-org1');
+var hurleyIdentityPath = path.resolve(homedir, 'hyperledger-fabric-network/.hfc-org1');
 
 console.log(' Store path:' + hurleyIdentityPath);
 
@@ -56,7 +56,7 @@ Fabric_Client.newDefaultKeyValueStore({
 
     // at this point we should have the admin user
     // first need to register the user with the CA server
-    return fabric_ca_client.register({ enrollmentID: 'chaincodeAdmin', attrs: [{ name: 'admin', value: 'true' }], role: 'client' }, admin_user);
+    return fabric_ca_client.register({ enrollmentID: 'chaincodeAdmin', attrs: [{ name: 'admin', value: 'true', ecert: true }], role: 'client' }, admin_user);
 }).then((secret) => {
     // next we need to enroll the user with CA server
     console.log('Successfully registered chaincodeAdmin - secret:' + secret);
@@ -67,7 +67,7 @@ Fabric_Client.newDefaultKeyValueStore({
     return fabric_client.createUser(
         {
             username: 'chaincodeAdmin',
-            mspid: 'Org1MSP',
+            mspid: 'org1MSP',
             cryptoContent: { privateKeyPEM: enrollment.key.toBytes(), signedCertPEM: enrollment.certificate }
         });
 }).then((user) => {

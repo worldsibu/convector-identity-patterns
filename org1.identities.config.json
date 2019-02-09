@@ -11,6 +11,11 @@
       "name": "participant-cc",
       "version": "file:./packages/participant-cc",
       "controller": "ParticipantController"
+    },
+    {
+      "name": "product-cc",
+      "version": "file:./packages/product-cc",
+      "controller": "ProductController"
     }
   ],
   "policy": {

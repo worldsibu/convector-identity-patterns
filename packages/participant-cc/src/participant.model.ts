@@ -13,7 +13,7 @@ export interface x509Identities {
 }
 
 export const x509Identities = yup.object<x509Identities>().shape({
-  status: yup.string().required(),
+  status: yup.boolean().required(),
   fingerprint: yup.string().required()
 });
 

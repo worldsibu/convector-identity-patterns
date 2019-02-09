@@ -55,18 +55,22 @@ var ParticipantController = (function (_super) {
                 switch (_a.label) {
                     case 0:
                         isAdmin = this.fullIdentity.getAttributeValue('admin');
-                        console.log(isAdmin);
                         console.log(this.fullIdentity);
+                        console.log(isAdmin);
                         requesterMSP = this.fullIdentity.getMSPID();
                         return [4, participant_model_1.Participant.getOne(id)];
                     case 1:
                         existing = _a.sent();
-                        if (!existing) {
+                        console.log('Existing participant:');
+                        console.log(existing);
+                        if (!existing || !existing.id) {
                             throw new Error('No identity exists with that ID');
                         }
+                        console.log("existing.msp=" + existing.msp + " requesterMSP=" + requesterMSP);
                         if (existing.msp != requesterMSP) {
                             throw new Error('Unathorized. MSPs do not match');
                         }
+                        console.log("isAdmin=" + isAdmin);
                         if (!isAdmin) {
                             throw new Error('Unathorized. Requester identity is not an admin');
                         }
