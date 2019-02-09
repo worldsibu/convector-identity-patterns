@@ -1,0 +1,16 @@
+{
+  "name": "administrative",
+  "version": "1.0.0",
+  "description": "",
+  "main": "registerUser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fabric-ca-client": "^1.4.0",
+    "fabric-client": "^1.4.0",
+    "grpc": "^1.18.0"
+  }
+}

@@ -18,13 +18,13 @@
     "cc:install": "f() { ./node_modules/.bin/hurl install $1 node -P ./chaincode-$1; }; f"
   },
   "devDependencies": {
-    "lerna": "^3.4.3",
     "@worldsibu/convector-adapter-mock": "^1.2.0",
     "@worldsibu/convector-tool-chaincode-manager": "^1.2.0",
     "@worldsibu/convector-tool-dev-env": "^1.2.0",
-    "fabric-ca-client": "~1.1.2",
-    "fabric-client": "~1.1.2",
-    "npm-run-all": "^4.1.5",
-    "@worldsibu/hurley": "^0.4.14"
+    "@worldsibu/hurley": "^0.4.14",
+    "fabric-ca-client": "^1.1.2",
+    "fabric-client": "^1.1.2",
+    "lerna": "^3.4.3",
+    "npm-run-all": "^4.1.5"
   }
 }

@@ -52,6 +52,7 @@ export class ParticipantController extends ConvectorController {
     // Check permissions
     let isAdmin = this.fullIdentity.getAttributeValue('admin');
     console.log(isAdmin);
+    console.log(this.fullIdentity);
     let requesterMSP = this.fullIdentity.getMSPID();
 
     // Retrieve to see if exists
@@ -64,8 +65,8 @@ export class ParticipantController extends ConvectorController {
       throw new Error('Unathorized. MSPs do not match');
     }
 
-    if (!existing) {
-      throw new Error('Unathorized. MSPs do not match');
+    if (!isAdmin) {
+      throw new Error('Unathorized. Requester identity is not an admin');
     }
 
     // Disable previous identities!

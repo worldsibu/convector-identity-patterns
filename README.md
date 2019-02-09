@@ -1,75 +1,62 @@
-# identities - participant
+# Identity Patterns for Convector in Hyperledger Fabric
 
-This awesome project was created automatically with <a href="https://github.com/worldsibu/convector-cli" target="_blank">Convector CLI</a>.
-By default new Convector projects locally include <a href="https://github.com/worldsibu/hurley">Hurley</a> to manage your development environment seamlessly, so you don't have to worry about setting up the network and hard ways to install  and upgrade your chaincodes.
+Identity on Convector is based on native patters from Fabric. [Read more here](https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html).
 
-You may very well install **Hurley** globally for easier and more flexible management. 
+This repo includes an example of:
 
-`npm i -g @worldsibu/hurley`
+* Participants chaincode for shared references.
+  * Fingerprint based registration of participants.
+* ABAC-based authorization. [Read more](https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html#attribute-based-access-control)
 
-Since with Hurley globally you have control over everything, some things that you can do, for example, is installing a Convector Smart Contract with a different name than the one you used for your project.
+Example:
 
+## Basic concepts
+
+### Identities in Fabric. [Read more here](https://hyperledger-fabric.readthedocs.io/en/release-1.4/identity/identity.html).
+
+```bash
+The different actors in a blockchain network include peers, orderers, client applications, administrators and more. Each of these actors — active elements inside or outside a network able to consume services — has a digital identity encapsulated in an X.509 digital certificate. These identities really matter because they determine the exact permissions over resources and access to information that actors have in a blockchain network.
 ```
-# Use the same package
-# Install a new chaincode with the same source code but the name 'anothernameforyourcc'
-hurl install anothernameforyourcc node
+
+### Attribute-Based Access Control or ABAC [Read more](https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html#attribute-based-access-control)
+
+```bash
+Access control decisions can be made by chaincode (and by the Hyperledger Fabric runtime) based upon an identity’s attributes. This is called Attribute-Based Access Control, or ABAC for short.
+
+In order to make this possible, an identity’s enrollment certificate (ECert) may contain one or more attribute name and value. The chaincode then extracts an attribute’s value to make an access control decision.
 ```
 
-Other complex tasks you may need is installing to a different channel.
+### Participant chaincode on Convector
 
-```
-# Use the same package
-# Be sure you started your environment with more than one channel running 'hurl new --channels 2'. Otherwise this will throw an error.
-hurl install anothernameforyourcc node --channel ch2
+It is a common pattern to reflect a CA identity in a chaincode accessible way.
+These identities do not replace Fabric identities, on the contraire, it leverages them to work in business use cases.
+
+## Run the project
+
+```bash
+npm i
+
+# Start your blockchain network
+npm run env:restart
+
+# Install the chaincode
+npm run cc:start
+
+# Register a special user with an attribute Admin
+node ./packages/administrative/registerUser.js
+
+# Hurley uses the Admin of org1 by default to run invoke requests
+# Running the following command will enroll the user in the participants chaincode
+hurl invoke participant -c '{"Args":["participant_register","1"]}'
+
+# Get the recently created identity
+hurl invoke participant -c '{"Args":["participant_get","1"]}'
+
+# Try to update the participant and get an expected error since admin doesn't use the attribute `Admin`
+hurl invoke participant -c '{"Args":["participant_changeIdentity","1","randomID"]}'
 ```
 
 ---
-
-If you don't want to, don't worries! This project works right away.
-
-## Start - if you have Hurley globally
-
-### Bring your project to life 
-
-```
-# Install dependencies - From the root of your project
-npm i
-# Create a new development blockchain network  - From the root of your project
-hurl new
-```
-
-###  Install and upgrade chaincodes
-
-```
-# Package your smart contract's code  - From the root of your project
-npm run cc:package -- participant org1
-# Install to your blockchain - From the root of your project
-hurl install participant node -P ./chaincode-participant
-
-# Upgrade your existing chaincode - From the root of your project
-hurl upgrade participant node 1.2 -P ./chaincode-participant
-```
-
-## Start - if you don't have Hurley globally
-
-### Bring your project to life 
-
-```
-# Install dependencies - From the root of your project
-npm i
-# Create a new development blockchain network  - From the root of your project
-npm run env:restart
-```
-
-###  Install and upgrade chaincodes
-
-```
-# Install to your blockchain - From the root of your project
-npm run cc:start -- participant
-
-# Upgrade your existing chaincode - From the root of your project
-npm run cc:upgrade -- participant 1.2
-```
 
 > Check all the information to work with Convector <a href="https://worldsibu.github.io/convector" target="_blank">in the DOCS site</a>.
 

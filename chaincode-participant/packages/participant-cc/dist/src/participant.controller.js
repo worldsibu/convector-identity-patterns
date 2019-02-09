@@ -56,6 +56,7 @@ var ParticipantController = (function (_super) {
                     case 0:
                         isAdmin = this.fullIdentity.getAttributeValue('admin');
                         console.log(isAdmin);
+                        console.log(this.fullIdentity);
                         requesterMSP = this.fullIdentity.getMSPID();
                         return [4, participant_model_1.Participant.getOne(id)];
                     case 1:
@@ -66,8 +67,8 @@ var ParticipantController = (function (_super) {
                         if (existing.msp != requesterMSP) {
                             throw new Error('Unathorized. MSPs do not match');
                         }
-                        if (!existing) {
-                            throw new Error('Unathorized. MSPs do not match');
+                        if (!isAdmin) {
+                            throw new Error('Unathorized. Requester identity is not an admin');
                         }
                         existing.identities = existing.identities.map(function (identity) {
                             identity.status = false;
