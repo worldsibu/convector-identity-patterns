@@ -29,6 +29,7 @@ export class ParticipantController extends ConvectorController {
     if (!existing || !existing.id) {
       let participant = new Participant();
       participant.id = id;
+      participant.name = id;
       participant.msp = this.fullIdentity.getMSPID();
       // Create a new identity
       participant.identities = [{

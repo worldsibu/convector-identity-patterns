@@ -31,6 +31,7 @@ var ParticipantController = (function (_super) {
                         if (!(!existing || !existing.id)) return [3, 3];
                         participant = new participant_model_1.Participant();
                         participant.id = id;
+                        participant.name = id;
                         participant.msp = this.fullIdentity.getMSPID();
                         participant.identities = [{
                                 fingerprint: this.sender,
