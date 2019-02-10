@@ -118,7 +118,7 @@ hurl invoke identities -c '{"Args":["participant_get","user1"]}'
 hurl invoke identities -c '{"Args":["participant_changeIdentity","user1","randomID"]}'
 
 # Now make a request with the identity that has the flag `admin` therefore is authorized to make updates!
-# Hurley as of 0.4.28 does not support changing the identity making requests, since that usually happens at the application level, so we use the chaincode manager from Convector.
+# Hurley up to 0.4.28 does not support changing the identity making requests, since that usually happens at the application level, so we use the chaincode manager from Convector.
 # Change random id for a valid x509 fingerprint in your real application.
 ./node_modules/.bin/chaincode-manager --config ./org1.identities.config.json invoke identities participant changeIdentity "user1" "randomID" --user chaincodeAdmin
 
