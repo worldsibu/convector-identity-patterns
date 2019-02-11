@@ -6,7 +6,6 @@ const Fabric_Client = require('fabric-client');
 const Fabric_CA_Client = require('fabric-ca-client');
 
 const os = require('os');
-const fs = require('fs');
 const path = require('path');
 
 const fabric_client = new Fabric_Client();
@@ -15,15 +14,6 @@ let admin_user = null;
 let member_user = null;
 const homedir = os.homedir();
 const hurleyIdentityPath = path.resolve(homedir, 'hyperledger-fabric-network/.hfc-org1');
-
-console.log('Replacing references in config.json')
-const configFilePath = path.join(__dirname, '../../org1.identities.config.json');
-const configFile = require(configFilePath);
-fs.writeFileSync(configFilePath, JSON.stringify({
-    ...configFile,
-    keyStore: configFile.keyStore.replace(/^.+\/hyperledger-fabric-network/, path.join(homedir, 'hyperledger-fabric-network')),
-    networkProfile: configFile.networkProfile.replace(/^.+\/hyperledger-fabric-network/, path.join(homedir, 'hyperledger-fabric-network'))
-}, null, 2));
 
 console.log('Store path:' + hurleyIdentityPath);
 

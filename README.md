@@ -96,6 +96,9 @@ npm i
 # Start your blockchain network
 npm run env:restart
 
+# Patch the org1.identities.config.json with the right home path
+node ./packages/administrative/update-paths.js
+
 # Install the chaincode
 npm run cc:start
 

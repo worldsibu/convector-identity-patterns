@@ -3,9 +3,9 @@
   "user": "admin",
   "txTimeout": 300000,
   "channel": "ch1",
-  "keyStore": "~/hyperledger-fabric-network/.hfc-org1",
+  "keyStore": "/Users/diestrin/hyperledger-fabric-network/.hfc-org1",
   "//**INSIDE-DOCKER**//keyStore": "/config/.hfc-org1",
-  "networkProfile": "~/hyperledger-fabric-network/network-profiles/org1.network-profile.yaml",
+  "networkProfile": "/Users/diestrin/hyperledger-fabric-network/network-profiles/org1.network-profile.yaml",
   "//**INSIDE-DOCKER**//networkProfile": "/config/network-profiles/org1.network-profile.inside-docker.yaml",
   "controllers": [
     {
