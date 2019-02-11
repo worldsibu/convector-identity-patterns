@@ -1,29 +1,31 @@
-'use strict';
-/*
-* Copyright IBM Corp All Rights Reserved
-*
-* SPDX-License-Identifier: Apache-2.0
-*/
 /*
  * Register and Enroll a user
  */
 
-var Fabric_Client = require('fabric-client');
-var Fabric_CA_Client = require('fabric-ca-client');
+const Fabric_Client = require('fabric-client');
+const Fabric_CA_Client = require('fabric-ca-client');
 
-var path = require('path');
-var util = require('util');
-var os = require('os');
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
 
-//
-var fabric_client = new Fabric_Client();
-var fabric_ca_client = null;
-var admin_user = null;
-var member_user = null;
-const homedir = require('os').homedir();
-var hurleyIdentityPath = path.resolve(homedir, 'hyperledger-fabric-network/.hfc-org1');
+const fabric_client = new Fabric_Client();
+let fabric_ca_client = null;
+let admin_user = null;
+let member_user = null;
+const homedir = os.homedir();
+const hurleyIdentityPath = path.resolve(homedir, 'hyperledger-fabric-network/.hfc-org1');
 
-console.log(' Store path:' + hurleyIdentityPath);
+console.log('Replacing references in config.json')
+const configFilePath = path.join(__dirname, '../../org1.identities.config.json');
+const configFile = require(configFilePath);
+fs.writeFileSync(configFilePath, JSON.stringify({
+    ...configFile,
+    keyStore: configFile.keyStore.replace(/^.+\/hyperledger-fabric-network/, path.join(homedir, 'hyperledger-fabric-network')),
+    networkProfile: configFile.networkProfile.replace(/^.+\/hyperledger-fabric-network/, path.join(homedir, 'hyperledger-fabric-network'))
+}, null, 2));
+
+console.log('Store path:' + hurleyIdentityPath);
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
 Fabric_Client.newDefaultKeyValueStore({
@@ -31,16 +33,13 @@ Fabric_Client.newDefaultKeyValueStore({
 }).then((state_store) => {
     // assign the store to the fabric client
     fabric_client.setStateStore(state_store);
-    var crypto_suite = Fabric_Client.newCryptoSuite();
+    const crypto_suite = Fabric_Client.newCryptoSuite();
     // use the same location for the state store (where the users' certificate are kept)
     // and the crypto store (where the users' keys are kept)
-    var crypto_store = Fabric_Client.newCryptoKeyStore({ path: hurleyIdentityPath });
+    const crypto_store = Fabric_Client.newCryptoKeyStore({ path: hurleyIdentityPath });
     crypto_suite.setCryptoKeyStore(crypto_store);
     fabric_client.setCryptoSuite(crypto_suite);
-    var tlsOptions = {
-        trustedRoots: [],
-        verify: false
-    };
+
     // be sure to change the http to https when the CA is running TLS enabled
     fabric_ca_client = new Fabric_CA_Client('http://localhost:7054', null, '', crypto_suite);
 
@@ -64,12 +63,11 @@ Fabric_Client.newDefaultKeyValueStore({
     return fabric_ca_client.enroll({ enrollmentID: 'chaincodeAdmin', enrollmentSecret: secret });
 }).then((enrollment) => {
     console.log('Successfully enrolled member user "chaincodeAdmin" ');
-    return fabric_client.createUser(
-        {
-            username: 'chaincodeAdmin',
-            mspid: 'org1MSP',
-            cryptoContent: { privateKeyPEM: enrollment.key.toBytes(), signedCertPEM: enrollment.certificate }
-        });
+    return fabric_client.createUser({
+        username: 'chaincodeAdmin',
+        mspid: 'org1MSP',
+        cryptoContent: { privateKeyPEM: enrollment.key.toBytes(), signedCertPEM: enrollment.certificate }
+    });
 }).then((user) => {
     member_user = user;
 
