@@ -1,5 +1,5 @@
 .history
 **/node_modules
 **/dist
-
+**/client
 /chaincode-*
