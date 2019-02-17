@@ -45,6 +45,18 @@ export class ProductControllerClient extends ConvectorController {
   }
 
   
+  public async transfer(
+    
+    id: string,
+    
+    to: string,
+  ){
+
+          return await this.adapter.invoke(this.name, 'transfer', this.user, id, to);
+        
+  }
+
+  
   public async get(
     
     id: string

@@ -58,6 +58,33 @@ export class ProductController extends ConvectorController {
   }
 
   @Invokable()
+  public async transfer(
+    @Param(yup.string())
+    id: string,
+    @Param(yup.string())
+    to: string,
+  ){
+    let product = await Product.getOne(id);
+    
+    if (!product || !product.id) {
+      throw new Error(`Product with id ${id} does not exist`);
+    }
+    const owner = await Participant.getOne(product.assetOwner);
+
+    if (!owner || !owner.id || !owner.identities) {
+      throw new Error('Referenced owner participant does not exist in the ledger');
+    }
+
+    const ownerCurrentIdentity = owner.identities.filter(identity => identity.status === true)[0];
+    if (ownerCurrentIdentity.fingerprint === this.sender) {
+      product.assetOwner = to;
+      await product.save();
+    } else {
+      throw new Error(`Identity ${this.sender} is not allowed to update product just ${owner.name} ${ownerCurrentIdentity.fingerprint} can`);
+    }
+  }
+
+  @Invokable()
   public async get(
     @Param(yup.string())
     id: string

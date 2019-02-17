@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "install": "npm-run-all -s lerna:install",
-    "env:restart": "hurl new",
+    "env:restart": "hurl new -u 3",
     "env:clean": "hurl clean",
     "cc:start": "f() { npm run cc:package; npm run cc:install; }; f",
     "cc:upgrade": "f() { npm run cc:package; hurl upgrade identities node $1  -P ./chaincode-identities; }; f",
@@ -21,7 +21,7 @@
     "@worldsibu/convector-adapter-mock": "^1.2.0",
     "@worldsibu/convector-tool-chaincode-manager": "^1.2.0",
     "@worldsibu/convector-tool-dev-env": "^1.2.0",
-    "@worldsibu/hurley": "^0.4.14",
+    "@worldsibu/hurley": "^0.5.1",
     "fabric-ca-client": "^1.1.2",
     "fabric-client": "^1.1.2",
     "lerna": "^3.4.3",

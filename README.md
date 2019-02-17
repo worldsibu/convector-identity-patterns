@@ -111,53 +111,72 @@ docker logs -f dev-peer0.org1.hurley.lab-identities-1.0
 
 # Hurley uses the Admin of org1 by default to run invoke requests
 # Running the following command will enroll the user in the participants chaincode
-hurl invoke identities -c '{"Args":["participant_register","user1"]}'
+hurl invoke identities participant_register "user1"
 
 # Get the recently created identity
-hurl invoke identities -c '{"Args":["participant_get","user1"]}'
+hurl invoke identities participant_get "user1"
 
 # Try to update the participant
 # You will get an expected error since the user Hurley uses by default to make the request doesn't use have the `admin` in its `attrs` fields. Expected error "Unathorized. Requester identity is not an admin"
-hurl invoke identities -c '{"Args":["participant_changeIdentity","user1","randomID"]}'
+hurl invoke identities participant_changeIdentity "user1" "randomID"
 
 # Now make a request with the identity that has the flag `admin` therefore is authorized to make updates!
 # Hurley up to 0.4.28 does not support changing the identity making requests, since that usually happens at the application level, so we use the chaincode manager from Convector.
 # Change random id for a valid x509 fingerprint in your real application.
-./node_modules/.bin/chaincode-manager --config ./org1.identities.config.json invoke identities participant changeIdentity "user1" "randomID" --user chaincodeAdmin
+
+hurl invoke identities participant_changeIdentity "user1" "randomID" -u chaincodeAdmin
 
 # Get the recently updated identity to reflect changes
-hurl invoke identities -c '{"Args":["participant_get","user1"]}'
+hurl invoke identities participant_get "user1"
 
 # Create a product assinging the participant with the ID 1 as the asset owner
-hurl invoke identities -c '{"Args":["product_create","prod1","pineapples hello","user1"]}'
+hurl invoke identities product_create "prod1" "pineapples hello" "user1" -u user1
 
 # Get that product
-hurl invoke identities -c '{"Args":["product_get","prod1"]}'
+hurl invoke identities product_get "prod1"
 
-# Make an update request with the x509 (identity) from the user 1
-# By default the call will be made with the x509 of the Admin identity of org1 (the one we enrolled previously)
+# Make an update request with the x509 (identity) from the user1
 # This should return an error! Because we updated the current identity of it to `randomID` which is NOT the fingerprint of a valid cert
-./node_modules/.bin/chaincode-manager --config ./org1.identities.config.json invoke identities product update "prod1" "pineapples hello2modified" --user admin
+hurl invoke identities product_update "prod1" "pineapples hello2modified" --user user1
 
 # Let's go back to the participant chaincode and set the x509 identity through `changeIdentity` to the valid x509 identity
 # In your real application this can be automated
-node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').resolve(require('os').homedir(), 'hyperledger-fabric-network/.hfc-org1/admin'), 'utf8')).enrollment.identity.certificate)" | openssl x509 -fingerprint -noout | cut -d '=' -f2 ;
+node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').resolve(require('os').homedir(), 'hyperledger-fabric-network/.hfc-org1/user1'), 'utf8')).enrollment.identity.certificate)" | openssl x509 -fingerprint -noout | cut -d '=' -f2 ;
 
 # The result will look like: 6C:B0:F8:D8:1B:08:3F:BA:18:F7:8B:6E:AB:77:53:97:C1:2F:71:14
 # Copy the value and paste it where it says "actualIdentity"
-./node_modules/.bin/chaincode-manager --config ./org1.identities.config.json invoke identities participant changeIdentity "user1" "actualIdentity" --user chaincodeAdmin
+hurl invoke identities participant_changeIdentity "user1" "actualIdentity" --user chaincodeAdmin
 
 # Get the participant again to see that your changes were applied successfully
-hurl invoke identities -c '{"Args":["participant_get","user1"]}'
+hurl invoke identities participant_get "user1"
 
 # Make the call again and successfully update the product
-./node_modules/.bin/chaincode-manager --config ./org1.identities.config.json invoke identities product update "prod1" "pineapples hello2modified" --user admin
+hurl invoke identities product_update "prod1" "pineapples hello2modified" --user user1
 
 # Get that product again!
-hurl invoke identities -c '{"Args":["product_get","prod1"]}'
+hurl invoke identities product_get "prod1"
 ```
 
-> The reason why this example uses `./node_modules/.bin/chaincode-manager` instead of Hurley is because Hurley is meant to be used for network management matters therefore its current identity is always admin. On the other hand `chaincode-manager` allows for more flexible identity management to emulate your application. In future releases Hurley may support more advanced settings like identity changes just like `chaincode-manager`. Either way, in your application how you manage identities is up to you through Convector or Fabric SDK.
+## Try to transfer an asset
+
+```bash
+# Register another user
+hurl invoke identities participant_register "user2" --user user2
+
+# Transfer asset to user2
+hurl invoke identities product_transfer "prod1" "user2" --user user1
+
+# Try to update it with an expected error since this is not the owner anymore
+hurl invoke identities product_update "prod1" "pineapples another change" --user user1
+
+# Now do it with the actual owner
+hurl invoke identities product_update "prod1" "pineapples another change" --user user2
+
+# Get it again to see the change
+hurl invoke identities product_get "prod1"
+
+```
+
 ---
 
 > Check all the information to work with Convector <a href="https://worldsibu.github.io/convector" target="_blank">in the DOCS site</a>.
