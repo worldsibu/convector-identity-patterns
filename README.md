@@ -1,5 +1,7 @@
 # Identity Patterns for Convector in Hyperledger Fabric
 
+> This example is using Convector 1.3
+
 Identity on Convector is based on native patters from Fabric. [Read more here](https://hyperledger-fabric-ca.readthedocs.io/en/release-1.4/users-guide.html).
 
 This repo includes an example of:
@@ -61,8 +63,8 @@ public msp: string;
 // Certificate fingerprints allowed for one identity
 // When a request arrives and you check the `this.sender` inside of a chaincode you can
 // compare that value against a model property, for example `if(product.createdBy===this.sender){ product.updated=true; await product.save(); }`
-@Validate(yup.array(x509Identities))
-public identities: x509Identities[];
+@Validate(yup.array(x509Identities.schema()))
+public identities: Array<FlatConvectorModel<x509Identities>>;
 ```
 
 This example also combines the `ABAC` pattern from Fabric when for example an identity (x509 cert) changes for one user (after revokation for example). If an user from the same MSP and with the attribute `admin` tries to call `changeIdentity` the chaincode will disable previous authenticated certs and will enable a new identity sent by parameters. This provides management and scalability for your identities.
@@ -94,7 +96,7 @@ if (ownerCurrentIdentity.fingerprint === this.sender) {
 npm i
 
 # Start your blockchain network
-npm run env:restart
+npm run start
 
 # Patch the org1.identities.config.json with the right home path
 node ./packages/administrative/update-paths.js
@@ -121,7 +123,6 @@ hurl invoke identities participant_get "user1"
 hurl invoke identities participant_changeIdentity "user1" "randomID"
 
 # Now make a request with the identity that has the flag `admin` therefore is authorized to make updates!
-# Hurley up to 0.4.28 does not support changing the identity making requests, since that usually happens at the application level, so we use the chaincode manager from Convector.
 # Change random id for a valid x509 fingerprint in your real application.
 
 hurl invoke identities participant_changeIdentity "user1" "randomID" -u chaincodeAdmin

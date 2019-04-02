@@ -4,20 +4,17 @@ import {
   Controller,
   ConvectorController,
   Invokable,
-  Param
-} from '@worldsibu/convector-core-controller';
-import { BaseStorage } from '@worldsibu/convector-core-storage';
+  Param,
+  BaseStorage
+} from '@worldsibu/convector-core';
+
+import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 
 import { Participant } from './participant.model';
 import { ClientIdentity } from 'fabric-shim';
 
 @Controller('participant')
-export class ParticipantController extends ConvectorController {
-  get fullIdentity(): ClientIdentity {
-    const stub = (BaseStorage.current as any).stubHelper;
-    return new ClientIdentity(stub.getStub());
-  };
-
+export class ParticipantController extends ConvectorController<ChaincodeTx> {
   @Invokable()
   public async register(
     @Param(yup.string())
@@ -30,7 +27,7 @@ export class ParticipantController extends ConvectorController {
       let participant = new Participant();
       participant.id = id;
       participant.name = id;
-      participant.msp = this.fullIdentity.getMSPID();
+      participant.msp = this.tx.identity.getMSPID();
       // Create a new identity
       participant.identities = [{
         fingerprint: this.sender,
@@ -50,10 +47,10 @@ export class ParticipantController extends ConvectorController {
     newIdentity: string
   ) {
     // Check permissions
-    let isAdmin = this.fullIdentity.getAttributeValue('admin');
-    console.log(this.fullIdentity);
+    let isAdmin = this.tx.identity.getAttributeValue('admin');
+    console.log(this.tx.identity);
     console.log(isAdmin);
-    let requesterMSP = this.fullIdentity.getMSPID();
+    let requesterMSP = this.tx.identity.getMSPID();
 
     // Retrieve to see if exists
     const existing = await Participant.getOne(id);

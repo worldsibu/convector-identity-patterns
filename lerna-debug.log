@@ -1,0 +1,9 @@
+0 silly argv { _: [ 'bootstrap' ],
+0 silly argv   lernaVersion: '3.11.0',
+0 silly argv   '$0': '/Users/walter/Development/convector-identity-patterns/node_modules/.bin/lerna' }
+1 notice cli v3.11.0
+2 verbose rootPath /Users/walter/Development/convector-identity-patterns
+3 error JSONError: Unexpected token } in JSON at position 425 while parsing near '...-reporter spec",   },  "dependencies":...' in packages/participant-cc/package.json
+3 error     at module.exports (/Users/walter/Development/convector-identity-patterns/node_modules/parse-json/index.js:26:19)
+3 error     at parse (/Users/walter/Development/convector-identity-patterns/node_modules/load-json-file/index.js:8:29)
+3 error     at pify.then.data (/Users/walter/Development/convector-identity-patterns/node_modules/load-json-file/index.js:10:67)
