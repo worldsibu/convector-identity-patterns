@@ -113,7 +113,7 @@ docker logs -f dev-peer0.org1.hurley.lab-identities-1.0
 
 # Hurley uses the Admin of org1 by default to run invoke requests
 # Running the following command will enroll the user in the participants chaincode
-hurl invoke identities participant_register "user1"
+hurl invoke identities participant_register "user1" "User 1"
 
 # Get the recently created identity
 hurl invoke identities participant_get "user1"
@@ -162,7 +162,7 @@ hurl invoke identities product_get "prod1"
 
 ```bash
 # Register another user
-hurl invoke identities participant_register "user2" --user user2
+hurl invoke identities participant_register "user2" "User 2" --user user2
 
 # Transfer asset to user2
 hurl invoke identities product_transfer "prod1" "user2" --user user1

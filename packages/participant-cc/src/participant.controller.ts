@@ -19,6 +19,8 @@ export class ParticipantController extends ConvectorController<ChaincodeTx> {
   public async register(
     @Param(yup.string())
     id: string,
+    @Param(yup.string())
+    name: string
   ) {
     // Retrieve to see if exists
     const existing = await Participant.getOne(id);
@@ -26,7 +28,7 @@ export class ParticipantController extends ConvectorController<ChaincodeTx> {
     if (!existing || !existing.id) {
       let participant = new Participant();
       participant.id = id;
-      participant.name = id;
+      participant.name = name || id;
       participant.msp = this.tx.identity.getMSPID();
       // Create a new identity
       participant.identities = [{
